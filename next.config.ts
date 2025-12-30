@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Configure API proxy for Zeabur deployment
   async rewrites() {
     return [
       {

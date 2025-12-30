@@ -80,7 +80,7 @@ export default function PlanetCalculator() {
                 setPlanetsData(formattedData);
             } else {
                 throw new Error(res.data?.error?.message || "获取行星数据失败");
-            }
+api/calendar/date-comprehensive-data:1  Failed to load resource: the server responded with a status of 404 ()            }
         } catch (err) {
             let errorMessage = "获取行星数据失败，请稍后再试。";
             if (axios.isAxiosError(err) && err.response) {
