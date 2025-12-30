@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://127.0.0.1:5000/api/:path*",
+        destination: "https://astro-zangli-ai-backend.zeabur.app/api/:path*",
       },
     ];
   },
