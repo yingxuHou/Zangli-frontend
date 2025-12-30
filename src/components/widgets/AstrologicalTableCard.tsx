@@ -1,4 +1,4 @@
-﻿import * as React from "react";
+import * as React from "react";
 
 /**
  * AstrologicalTableCard
@@ -82,7 +82,7 @@ const AstrologicalTableCard: React.FC<AstrologicalTableCardProps> = ({
           </thead>
           <tbody>
             {rows.map((r, idx) => (
-              <tr key={idx} className={`${idx < rows.length - 1 ? "border-b border-gray-600/30" : ""} hover:bg-gray-800/20 transition-colors duration-200`}>
+              <tr key={`${idx}-${r.fixedWeekday}`} className={`${idx < rows.length - 1 ? "border-b border-gray-600/30" : ""} hover:bg-gray-800/20 transition-colors duration-200`}>
                 <td className="py-1.5 px-1 text-gray-200 font-medium text-center">{r.fixedWeekday}</td>
                 <td className="py-1.5 px-1 text-gray-200 font-medium text-center">{r.solarLunar}</td>
                 <td className="py-1.5 px-1 text-gray-200 font-medium text-center">{r.fixedDay}</td>

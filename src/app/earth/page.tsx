@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import SevenStars from "@/components/seven-stars/page";
 import SevenData from "@/components/seven-data/page";
@@ -16,20 +16,20 @@ export default function EarthPage() {
   const tabParam = searchParams.get("tab");
 
   // 根据URL参数设置初始页面
-  const getInitialPage = () => {
+  const getInitialPage = useCallback(() => {
     if (tabParam === "seven-stars") return 1;
     if (tabParam === "tibetan-cycle") return 2;
     return 0; // 默认显示zodiac
-  };
+  }, [tabParam]);
 
-  const [currentPage, setCurrentPage] = useState(getInitialPage());
+  const [currentPage, setCurrentPage] = useState(getInitialPage);
   const [showSevenData, setShowSevenData] = useState(false);
   const [planetsData, setPlanetsData] = useState<PlanetsData | null>(null);
 
   // 当URL参数变化时更新当前页面
   useEffect(() => {
     setCurrentPage(getInitialPage());
-  }, [tabParam]);
+  }, [getInitialPage]);
 
   // Fetch planets data on component mount
   useEffect(() => {

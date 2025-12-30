@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import Image from "next/image";
 
 export default function TibetanCyclePage() {
     const baseYear = 2025;
@@ -23,7 +24,7 @@ export default function TibetanCyclePage() {
     const years = Array.from({ length: 201 }, (_, i) => baseYear - 100 + i);
 
     // 计算干支与旋转角
-    const calculate = (y: number = year) => {
+    const calculate = useCallback((y: number = year) => {
         const offsetYear = (y - 2025) % 60;
         const dzAngle = -offsetYear * 30;
         const tgAngle = -offsetYear * 36;
@@ -33,11 +34,11 @@ export default function TibetanCyclePage() {
         });
         const index = (y + 56 + 60) % 60;
         setResult(`${y} 年是 【${ganzhiList[index]}】年`);
-    };
+    }, [year, ganzhiList]);
 
     useEffect(() => {
         calculate(baseYear);
-    }, []);
+    }, [calculate]);
 
     // 打开下拉时滚动至当前年份顶部
     useEffect(() => {
@@ -52,7 +53,7 @@ export default function TibetanCyclePage() {
                 });
             }, 30);
         }
-    }, [isOpen]);
+    }, [isOpen, year, years]);
 
     // 点击外部关闭
     useEffect(() => {
@@ -144,9 +145,11 @@ export default function TibetanCyclePage() {
                         transition: "transform 1s ease-out",
                     }}
                 >
-                    <img
+                    <Image
                         src="/pho/地支.png"
                         alt="地支盘"
+                        width={320}
+                        height={320}
                         className="w-full h-full select-none pointer-events-none"
                     />
                 </div>
@@ -157,16 +160,20 @@ export default function TibetanCyclePage() {
                         transition: "transform 1s ease-out",
                     }}
                 >
-                    <img
+                    <Image
                         src="/pho/天干.png"
                         alt="天干盘"
+                        width={320}
+                        height={320}
                         className="w-full h-full select-none pointer-events-none"
                     />
                 </div>
                 <div className="absolute top-0 left-0 w-full h-full">
-                    <img
+                    <Image
                         src="/pho/指针.png"
                         alt="指针"
+                        width={320}
+                        height={320}
                         className="w-full h-full select-none pointer-events-none"
                     />
                 </div>

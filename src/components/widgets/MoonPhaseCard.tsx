@@ -1,5 +1,6 @@
-﻿import * as React from "react";
+import * as React from "react";
 import Image from "next/image";
+import { useCallback } from "react";
 
 /**
  * MoonPhaseCard
@@ -41,7 +42,7 @@ const MoonPhaseCard: React.FC<MoonPhaseCardProps> = ({
 }) => {
   // 根据农历日期计算月相图片编号（1-31）
   // 如果 lunarDay 不存在或无效，使用照明度来估算
-  const getMoonImageIndex = (): number => {
+  const getMoonImageIndex = useCallback((): number => {
     if (lunarDay && lunarDay >= 1 && lunarDay <= 30) {
       // 农历日期 1-30 对应图片 1-30
       return lunarDay;
@@ -61,7 +62,7 @@ const MoonPhaseCard: React.FC<MoonPhaseCardProps> = ({
     }
     // 默认返回第15张（满月）
     return 15;
-  };
+  }, [lunarDay, illumination]);
 
   const moonImageIndex = getMoonImageIndex();
   const moonImagePath = `/moon_pic/moon_image_${String(moonImageIndex).padStart(5, '0')}.png`;
@@ -110,7 +111,6 @@ const MoonPhaseCard: React.FC<MoonPhaseCardProps> = ({
                 width={128}
                 height={128}
                 className="w-full h-full object-contain"
-                style={{ width: 'auto', height: 'auto' }}
               />
             </div>
           </div>
