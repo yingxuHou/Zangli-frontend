@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import FooterBar from "@/components/FooterBar";
-import { Card, CardData } from "@/components";
+import { CardData } from "@/components";
 
 // 定义HTML文件信息的接口
 interface HtmlFileInfo {
@@ -11,11 +12,11 @@ interface HtmlFileInfo {
     filename: string;
     title: string;
     desc: string;
+    img: string; // 添加 img 属性
 }
 
 export default function DocsPage() {
     const [cards, setCards] = useState<CardData[]>([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // 藏历主题与简介映射
@@ -56,12 +57,12 @@ export default function DocsPage() {
         ];
 
         // 转换为卡片数据
-        const newCards = htmlFiles.map((file, index) => ({
+        const newCards = htmlFiles.map((file) => ({
             id: file.id,
             titleLeft: file.title,
             titleRight: ``,
             desc: file.desc,
-            img: file.img || images[index % images.length],
+            img: file.img,
         }));
 
         setCards(newCards);
@@ -116,9 +117,11 @@ export default function DocsPage() {
                             <div className="bg-white/10 border border-white/15 rounded-2xl overflow-hidden hover:bg-white/15 transition-all duration-300">
                                 {/* 图片部分 */}
                                 <div className="w-full h-48 overflow-hidden">
-                                    <img
+                                    <Image
                                         src={card.img}
                                         alt={card.titleLeft}
+                                        width={500}
+                                        height={300}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     />
                                 </div>

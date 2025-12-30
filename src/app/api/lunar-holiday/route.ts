@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
           checkYear++;
         }
         monthsChecked++;
-      } catch (error) {
+      } catch {
         // 如果获取数据失败，继续查找下一个月
         checkMonth++;
         if (checkMonth > 12) {
@@ -106,10 +106,11 @@ export async function POST(request: NextRequest) {
 
     // 如果2年内都没找到，返回 null
     return NextResponse.json(null);
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "服务器错误";
     console.error("获取农历节日失败:", error);
     return NextResponse.json(
-      { error: error.message || "服务器错误" },
+      { error: errorMessage },
       { status: 500 }
     );
   }

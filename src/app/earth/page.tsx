@@ -9,7 +9,7 @@ import TibetanCycle from "@/components/tibetan-cycle/page";
 import WidgetCarousel from "@/components/widgets/WidgetCarousel";
 import EarthNav from "@/components/EarthNav/EarthNav";
 import FooterBar from "@/components/FooterBar";
-import { fetchPlanetsData, PlanetsData } from "@/services/planeApi";
+// import { fetchPlanetsData, PlanetsData } from "@/services/planeApi";
 export default function EarthPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function EarthPage() {
 
   const [currentPage, setCurrentPage] = useState(getInitialPage);
   const [showSevenData, setShowSevenData] = useState(false);
-  const [planetsData, setPlanetsData] = useState<PlanetsData | null>(null);
+  // const [planetsData, setPlanetsData] = useState<PlanetsData | null>(null);
 
   // 当URL参数变化时更新当前页面
   useEffect(() => {
@@ -32,29 +32,29 @@ export default function EarthPage() {
   }, [getInitialPage]);
 
   // Fetch planets data on component mount
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const now = new Date();
-        const params = {
-          year: now.getFullYear(),
-          month: now.getMonth() + 1,
-          day: now.getDate(),
-          hour: now.getHours(),
-          minute: now.getMinutes(),
-          longitude: 121.47, // Default to Shanghai longitude
-          latitude: 31.23,   // Default to Shanghai latitude
-        };
-        const data = await fetchPlanetsData(params);
-        setPlanetsData(data || null);
-        console.log("Planets data:", data);
-      } catch (error) {
-        console.error("Error fetching planets data:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const now = new Date();
+  //       const params = {
+  //         year: now.getFullYear(),
+  //         month: now.getMonth() + 1,
+  //         day: now.getDate(),
+  //         hour: now.getHours(),
+  //         minute: now.getMinutes(),
+  //         longitude: 121.47, // Default to Shanghai longitude
+  //         latitude: 31.23,   // Default to Shanghai latitude
+  //       };
+  //       const data = await fetchPlanetsData(params);
+  //       setPlanetsData(data || null);
+  //       console.log("Planets data:", data);
+  //     } catch (error) {
+  //       console.error("Error fetching planets data:", error);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   // 切换七星轨迹 ↔ 七星数据
   const handleToggleSeven = () => {

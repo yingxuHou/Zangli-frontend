@@ -1,18 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createRequire } from "module";
-
-// 使用 createRequire 动态创建 require 函数，避免构建时解析问题
-// 在 Next.js API 路由中，使用当前工作目录
-const require = createRequire(process.cwd() + "/package.json");
 
 // 延迟加载模块，避免构建时解析问题
-function getLunarCalendar() {
+async function getLunarCalendar() {
   try {
-    // 使用 createRequire 创建的 require 函数加载模块
-    // @ts-ignore
-    const LunarCalendar = require("lunar-calendar");
+    // 使用动态 import() 加载模块
+    const LunarCalendar = await import("lunar-calendar");
     // 处理不同的导出方式
-    return LunarCalendar.default || LunarCalendar || LunarCalendar.LunarCalendar;
+    return LunarCalendar.default || LunarCalendar;
   } catch (error) {
     console.error("无法加载 lunar-calendar 模块:", error);
     throw new Error("无法加载 lunar-calendar 模块");
@@ -31,7 +25,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 在运行时加载模块
-    const calendar = getLunarCalendar();
+    const calendar = await getLunarCalendar();
 
     const selectedDate = new Date(year, month - 1, day);
     const currentYear = year;
@@ -113,7 +107,7 @@ export async function POST(request: NextRequest) {
           checkYear++;
         }
         monthsChecked++;
-      } catch (error) {
+      } catch {
         // 如果获取数据失败，继续查找下一个月
         checkMonth++;
         if (checkMonth > 12) {
@@ -126,10 +120,11 @@ export async function POST(request: NextRequest) {
 
     // 如果2年内都没找到，返回 null
     return NextResponse.json(null);
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "服务器错误";
     console.error("获取公历节日失败:", error);
     return NextResponse.json(
-      { error: error.message || "服务器错误" },
+      { error: errorMessage },
       { status: 500 }
     );
   }

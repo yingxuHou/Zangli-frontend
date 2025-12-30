@@ -95,18 +95,18 @@ export default function PlanetCalculator() {
     };
 
     return (
-        <div className=\"relative min-h-screen bg-black text-white flex flex-col items-center justify-start pt-4 pb-2 overflow-hidden\">
+        <div className="relative min-h-screen bg-black text-white flex flex-col items-center justify-start pt-4 pb-2 overflow-hidden">
             {/* 背景 */}
-            <div className=\"absolute inset-0 bg-[url('/stars-bg.png')] bg-cover bg-center opacity-40 pointer-events-none\"></div>
+            <div className="absolute inset-0 bg-[url('/stars-bg.png')] bg-cover bg-center opacity-40 pointer-events-none"></div>
 
             {/* 输入表单 */}
             <form
                 onSubmit={handleSubmit}
-                className=\"relative z-10 mt-2 w-[92%] max-w-2xl backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl px-0 py-4 shadow-[0_0_20px_rgba(255,255,255,0.05)] text-sm\"
+                className="relative z-10 mt-2 w-[92%] max-w-2xl backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl px-0 py-4 shadow-[0_0_20px_rgba(255,255,255,0.05)] text-sm"
             >
-                <div className=\"flex items-end gap-2\">
+                <div className="flex items-end gap-2">
                     {/* 左侧 80% 输入框 */}
-                    <div className=\"w-4/5 space-y-1 px-3\">
+                    <div className="w-4/5 space-y-1 px-3">
                         {[
                             ["纬度 Latitude", "latitude"],
                             ["经度 Longitude", "longitude"],
@@ -115,13 +115,13 @@ export default function PlanetCalculator() {
                             ["海拔 Altitude", "altitude"],
                         ].map(([label, name]) => (
                             <div key={name}>
-                                <label className=\"block text-xs mb-1 opacity-80\">{label}</label>
+                                <label className="block text-xs mb-1 opacity-80">{label}</label>
                                 <input
                                     type={name === "date" ? "date" : name === "time" ? "time" : "text"}
                                     name={name}
-                                    value={formData[name as keyof typeof formData] || \"\"}
+                                    value={formData[name as keyof typeof formData] || ""}
                                     onChange={handleChange}
-                                    className=\"w-full bg-white/10 border border-white/20 rounded-full px-2 py-1.5 text-left text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-400 text-sm\"
+                                    className="w-full bg-white/10 border border-white/20 rounded-full px-2 py-1.5 text-left text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-400 text-sm"
                                     required={name !== "altitude"}
                                 />
                             </div>
@@ -129,14 +129,14 @@ export default function PlanetCalculator() {
                     </div>
 
                     {/* 右侧 20% 图片按钮 */}
-                    <div className=\"w-1/5 flex justify-center\">
-                        <button type=\"submit\" disabled={loading} className=\"p-0 bg-transparent border-none\">
+                    <div className="w-1/5 flex justify-center">
+                        <button type="submit" disabled={loading} className="p-0 bg-transparent border-none">
                             <Image
-                                src=\"/pho/箭头.png\"
-                                alt={loading ? \"计算中...\" : \"开始计算\"}
+                                src="/pho/箭头.png"
+                                alt={loading ? "计算中..." : "开始计算"}
                                 width={80}
                                 height={80}
-                                className=\"w-full h-auto\"
+                                className="w-full h-auto"
                             />
                         </button>
                     </div>
@@ -145,13 +145,13 @@ export default function PlanetCalculator() {
 
 
 
-            <div className=\"relative z-10 my-2 w-[92%] max-w-md border-t border-white/20\"></div>
+            <div className="relative z-10 my-2 w-[92%] max-w-md border-t border-white/20"></div>
             {/* 表头按钮风格 */}
-            <div className=\"grid grid-cols-5 gap-2 text-center mb-2\">
+            <div className="grid grid-cols-5 gap-2 text-center mb-2">
                 {['行星', '升起', '中天', '落下', '赤纬角'].map((title) => (
                     <div
                         key={title}
-                        className=\"bg-[rgb(90,89,122)] text-white text-xs py-1 px-3 rounded-full cursor-default select-none\"
+                        className="bg-[rgb(90,89,122)] text-white text-xs py-1 px-3 rounded-full cursor-default select-none"
                     >
                         {title}
                     </div>
@@ -160,18 +160,18 @@ export default function PlanetCalculator() {
 
             {/* 行星数据表 */}
             {planetsData && (
-                <div className=\"p-3 text-sm\">
-                    <div className=\"space-y-0.5 text-xs text-gray-100\">
+                <div className="p-3 text-sm">
+                    <div className="space-y-0.5 text-xs text-gray-100">
                         {Object.entries(planetsData).map(([planet, d]) => (
                             <div
                                 key={planet}
-                                className=\"grid grid-cols-5 gap-0.5 text-center py-0.5 rounded hover:bg-white/5 transition\"
+                                className="grid grid-cols-5 gap-0.5 text-center py-0.5 rounded hover:bg-white/5 transition"
                             >
-                                <span className=\"whitespace-nowrap\">{planet}</span>
-                                <span className=\"whitespace-nowrap\">{d.rise}</span>
-                                <span className=\"whitespace-nowrap\">{d.transit}</span>
-                                <span className=\"whitespace-nowrap\">{d.set}</span>
-                                <span className=\"whitespace-nowrap\">{d.declination}°</span>
+                                <span className="whitespace-nowrap">{planet}</span>
+                                <span className="whitespace-nowrap">{d.rise}</span>
+                                <span className="whitespace-nowrap">{d.transit}</span>
+                                <span className="whitespace-nowrap">{d.set}</span>
+                                <span className="whitespace-nowrap">{d.declination}°</span>
                             </div>
                         ))}
                     </div>
@@ -181,7 +181,7 @@ export default function PlanetCalculator() {
 
 
             {error && (
-                <div className=\"z-10 mt-2 text-red-400 bg-red-900/30 px-3 py-1.5 rounded-lg text-sm\">
+                <div className="z-10 mt-2 text-red-400 bg-red-900/30 px-3 py-1.5 rounded-lg text-sm">
                     {error}
                 </div>
             )}

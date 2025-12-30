@@ -1,5 +1,11 @@
 import { NextResponse } from 'next/server';
 
+interface BackendResponse {
+    success: boolean;
+    data?: unknown;
+    error?: { message: string };
+}
+
 export async function POST(req: Request) {
     try {
         const { message } = await req.json();
@@ -13,7 +19,7 @@ export async function POST(req: Request) {
             body: JSON.stringify({ message }),
         });
 
-        const data = await backendResponse.json();
+        const data: BackendResponse = await backendResponse.json();
 
         if (!backendResponse.ok || !data.success) {
             const errorMessage = data.error?.message || `Backend error! status: ${backendResponse.status}`;
@@ -23,8 +29,9 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ success: true, data: data.data });
 
-    } catch (error: any) {
+    } catch (error) {
         console.error('Error forwarding to backend:', error);
-        return NextResponse.json({ success: false, error: { message: error.message || 'Sorry, something went wrong.' } }, { status: 500 });
+        const errorMessage = error instanceof Error ? error.message : 'Sorry, something went wrong.';
+        return NextResponse.json({ success: false, error: { message: errorMessage } }, { status: 500 });
     }
 }

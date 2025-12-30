@@ -2,6 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import Link from "next/link";
+import Image from "next/image";
 import FooterBar from "@/components/FooterBar";
 
 // 模拟卡片数据，实际应用中你可能会从API获取
@@ -72,7 +73,7 @@ export default function DetailPage() {
                 {/* 详情内容 */}
                 <div className="flex-1 overflow-y-auto px-4 pb-24">
                     <h1 className="text-3xl font-bold mb-4">{card.titleLeft} - {card.titleRight}</h1>
-                    <img src={card.img} alt={card.titleLeft} className="w-full h-auto rounded-lg mb-4" />
+                    <Image src={card.img} alt={card.titleLeft} width={500} height={300} className="w-full h-auto rounded-lg mb-4" />
                     <p className="text-lg leading-relaxed">{card.desc}</p>
                 </div>
 

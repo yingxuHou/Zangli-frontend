@@ -30,7 +30,7 @@ export interface MoonPhaseCardProps {
 
 const MoonPhaseCard: React.FC<MoonPhaseCardProps> = ({
   header = { title: "二零二五年六月廿九", subtitle: "Moon Phase" },
-  timeLabel = "11 : 26",
+  
   illumination = 0.996,
   culminationText = "中天 23 : 34",
   moonRise = "05 : 19",

@@ -7,6 +7,12 @@ import FooterBar from "@/components/FooterBar";
 import { fetchCalendarData } from "@/services/calendarApi";
 
 
+interface AstrologicalTableRow {
+  label: string;
+  value: string;
+  colorClass: string;
+}
+
 export default function CalendarPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [city, setCity] = useState("上海市");
@@ -56,8 +62,9 @@ export default function CalendarPage() {
     try {
       const data = await fetchCalendarData({ date, cityName });
       setCalendarData(data || null);
-    } catch (e: any) {
-      setError(e?.message || "加载失败");
+    } catch (e) {
+      const errorMessage = e instanceof Error ? e.message : "加载失败";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -156,7 +163,7 @@ export default function CalendarPage() {
         title: calendarData?.astrologicalTable?.tibetanDate || "",
         subtitle: "Astrological Data"
       }}
-      rows={calendarData?.astrologicalTable?.tableData as any || []}
+      rows={calendarData?.astrologicalTable?.tableData as AstrologicalTableRow[] || []}
     />,
     <MoonPhaseCard
       key="moon"

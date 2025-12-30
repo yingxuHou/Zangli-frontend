@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import Image from "next/image";
 
 export default function TibetanCyclePage() {
@@ -13,18 +13,21 @@ export default function TibetanCyclePage() {
     const scrollRef = useRef<HTMLDivElement>(null);
 
     // 天干地支计算表
-    const tiangan = ["铁", "铁", "水", "水", "木", "木", "火", "火", "土", "土"];
-    const dizhi = ["虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪", "鼠", "牛"];
-    const ganzhiList: string[] = [];
-    for (let i = 0; i < 60; i++) {
-        ganzhiList.push(tiangan[(i - 6 + 10) % 10] + dizhi[(i - 2 + 12) % 12]);
-    }
+    const ganzhiList = useMemo(() => {
+        const tiangan = ["铁", "铁", "水", "水", "木", "木", "火", "火", "土", "土"];
+        const dizhi = ["虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪", "鼠", "牛"];
+        const list: string[] = [];
+        for (let i = 0; i < 60; i++) {
+            list.push(tiangan[(i - 6 + 10) % 10] + dizhi[(i - 2 + 12) % 12]);
+        }
+        return list;
+    }, []);
 
     // 年份列表
-    const years = Array.from({ length: 201 }, (_, i) => baseYear - 100 + i);
+    const years = useMemo(() => Array.from({ length: 201 }, (_, i) => baseYear - 100 + i), [baseYear]);
 
     // 计算干支与旋转角
-    const calculate = useCallback((y: number = year) => {
+    const calculate = useCallback((y: number) => {
         const offsetYear = (y - 2025) % 60;
         const dzAngle = -offsetYear * 30;
         const tgAngle = -offsetYear * 36;
@@ -34,11 +37,11 @@ export default function TibetanCyclePage() {
         });
         const index = (y + 56 + 60) % 60;
         setResult(`${y} 年是 【${ganzhiList[index]}】年`);
-    }, [year, ganzhiList]);
+    }, [ganzhiList]);
 
     useEffect(() => {
-        calculate(baseYear);
-    }, [calculate]);
+        calculate(year);
+    }, [year, calculate]);
 
     // 打开下拉时滚动至当前年份顶部
     useEffect(() => {

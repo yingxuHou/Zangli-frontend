@@ -65,7 +65,7 @@ const AstrologicalTableCard: React.FC<AstrologicalTableCardProps> = ({
       {/* 藏历信息框 - 只显示矩形框，居中放置 */}
       <div className="flex justify-center mb-6">
         <div className="astro-tibetan-rect-centered">
-          <span className="dateevents-tibetan-rect-text">木蛇年 五月廿九</span>
+          <span className="dateevents-tibetan-rect-text">{header.title}</span>
         </div>
       </div>
 
