@@ -47,7 +47,7 @@ export interface CalendarApiResponse {
   error?: { code: string; message: string; details?: string };
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "/api";
+const API_BASE = "/api";
 
 export async function fetchCalendarData(params?: { date?: string; cityName?: string }): Promise<CalendarApiResponse["data"]> {
   const body = {
