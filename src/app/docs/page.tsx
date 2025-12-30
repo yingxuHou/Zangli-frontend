@@ -66,7 +66,6 @@ export default function DocsPage() {
         }));
 
         setCards(newCards);
-        setLoading(false);
     }, []);
 
     return (

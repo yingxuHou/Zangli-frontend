@@ -15,12 +15,12 @@
       "static/css/c482373d66e3d945.css",
       "static/chunks/app/layout-95d7962d9e6aafef.js"
     ],
-    "/api/lunar-festival/route": [
+    "/api/chat/route": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",
       "static/chunks/c7879cf7-c19b5d874770bbb7.js",
       "static/chunks/508-5710c770570b8e9a.js",
       "static/chunks/main-app-8caad75d4f53560a.js",
-      "static/chunks/app/api/lunar-festival/route-b1579e58b1db1309.js"
+      "static/chunks/app/api/chat/route-b1579e58b1db1309.js"
     ],
     "/api/lunar-holiday/route": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",
@@ -29,12 +29,12 @@
       "static/chunks/main-app-8caad75d4f53560a.js",
       "static/chunks/app/api/lunar-holiday/route-b1579e58b1db1309.js"
     ],
-    "/api/chat/route": [
+    "/api/lunar-festival/route": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",
       "static/chunks/c7879cf7-c19b5d874770bbb7.js",
       "static/chunks/508-5710c770570b8e9a.js",
       "static/chunks/main-app-8caad75d4f53560a.js",
-      "static/chunks/app/api/chat/route-b1579e58b1db1309.js"
+      "static/chunks/app/api/lunar-festival/route-b1579e58b1db1309.js"
     ],
     "/chat/page": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",
@@ -50,7 +50,7 @@
       "static/chunks/508-5710c770570b8e9a.js",
       "static/chunks/main-app-8caad75d4f53560a.js",
       "static/chunks/289-bd467d25268aa2c7.js",
-      "static/chunks/app/cal/page-bb6c01cc88af8e38.js"
+      "static/chunks/app/cal/page-84f75f03e2a7f857.js"
     ],
     "/details/[id]/page": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",
@@ -58,16 +58,7 @@
       "static/chunks/508-5710c770570b8e9a.js",
       "static/chunks/main-app-8caad75d4f53560a.js",
       "static/chunks/289-bd467d25268aa2c7.js",
-      "static/chunks/app/details/[id]/page-ecb4d07e5d48964f.js"
-    ],
-    "/earth/page": [
-      "static/chunks/webpack-0213fbdcb80b69e5.js",
-      "static/chunks/c7879cf7-c19b5d874770bbb7.js",
-      "static/chunks/508-5710c770570b8e9a.js",
-      "static/chunks/main-app-8caad75d4f53560a.js",
-      "static/chunks/289-bd467d25268aa2c7.js",
-      "static/chunks/660-b649c5d532af0b0c.js",
-      "static/chunks/app/earth/page-0c0d1510ece5cb3f.js"
+      "static/chunks/app/details/[id]/page-d23b3ad6302e537a.js"
     ],
     "/details/topic/[id]/page": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",
@@ -83,7 +74,23 @@
       "static/chunks/508-5710c770570b8e9a.js",
       "static/chunks/main-app-8caad75d4f53560a.js",
       "static/chunks/289-bd467d25268aa2c7.js",
-      "static/chunks/app/docs/page-f2dc7730b708c0a9.js"
+      "static/chunks/app/docs/page-0f0c49a7a8597b14.js"
+    ],
+    "/earth/page": [
+      "static/chunks/webpack-0213fbdcb80b69e5.js",
+      "static/chunks/c7879cf7-c19b5d874770bbb7.js",
+      "static/chunks/508-5710c770570b8e9a.js",
+      "static/chunks/main-app-8caad75d4f53560a.js",
+      "static/chunks/289-bd467d25268aa2c7.js",
+      "static/chunks/660-b649c5d532af0b0c.js",
+      "static/chunks/app/earth/page-f2289150984edaca.js"
+    ],
+    "/page": [
+      "static/chunks/webpack-0213fbdcb80b69e5.js",
+      "static/chunks/c7879cf7-c19b5d874770bbb7.js",
+      "static/chunks/508-5710c770570b8e9a.js",
+      "static/chunks/main-app-8caad75d4f53560a.js",
+      "static/chunks/app/page-1ea2f940653aaaf5.js"
     ],
     "/user/page": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",
@@ -92,13 +99,6 @@
       "static/chunks/main-app-8caad75d4f53560a.js",
       "static/chunks/289-bd467d25268aa2c7.js",
       "static/chunks/app/user/page-fa29ffdad456f94b.js"
-    ],
-    "/page": [
-      "static/chunks/webpack-0213fbdcb80b69e5.js",
-      "static/chunks/c7879cf7-c19b5d874770bbb7.js",
-      "static/chunks/508-5710c770570b8e9a.js",
-      "static/chunks/main-app-8caad75d4f53560a.js",
-      "static/chunks/app/page-1ea2f940653aaaf5.js"
     ]
   }
 }

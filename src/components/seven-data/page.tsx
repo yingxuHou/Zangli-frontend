@@ -81,7 +81,7 @@ export default function PlanetCalculator() {
             } else {
                 throw new Error(res.data?.error?.message || "获取行星数据失败");
             }
-        } catch (err: unknown) {
+        } catch (err) {
             let errorMessage = "获取行星数据失败，请稍后再试。";
             if (axios.isAxiosError(err) && err.response) {
                 errorMessage = err.response.data?.error?.message || err.message;

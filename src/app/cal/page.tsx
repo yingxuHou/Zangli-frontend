@@ -1,17 +1,14 @@
 ﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { DateEventsCard, AstrologicalTableCard, MoonPhaseCard, PlanetaryChartCard, CalendarBox } from "@/components";
+import { DateEventsCard, MoonPhaseCard, PlanetaryChartCard, CalendarBox } from "@/components";
+import AstrologicalTableCard, { type AstrologicalRow } from "@/components/widgets/AstrologicalTableCard";
 import WidgetCarousel from "@/components/widgets/WidgetCarousel";
 import FooterBar from "@/components/FooterBar";
 import { fetchCalendarData } from "@/services/calendarApi";
 
 
-interface AstrologicalTableRow {
-  label: string;
-  value: string;
-  colorClass: string;
-}
+
 
 export default function CalendarPage() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -163,7 +160,7 @@ export default function CalendarPage() {
         title: calendarData?.astrologicalTable?.tibetanDate || "",
         subtitle: "Astrological Data"
       }}
-      rows={calendarData?.astrologicalTable?.tableData as AstrologicalTableRow[] || []}
+      rows={calendarData?.astrologicalTable?.tableData as AstrologicalRow[] || []}
     />,
     <MoonPhaseCard
       key="moon"
