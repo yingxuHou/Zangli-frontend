@@ -1,12 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
 
+type FestivalResponse =
+  | { name: string; date: string; isoDate: string; daysLeft: number }
+  | null;
+
+type LunarCalendarDateInfo = {
+  year: number;
+  month: number;
+  day: number;
+  solarFestival?: string;
+  lunarFestival?: string;
+};
+
+type LunarCalendarMonthData = {
+  monthData?: LunarCalendarDateInfo[];
+};
+
+type LunarCalendarApi = {
+  calendar: (year: number, month: number, includeLunar: boolean) => LunarCalendarMonthData;
+};
+
+let lunarCalendarModulePromise: Promise<LunarCalendarApi> | null = null;
+const responseCache = new Map<string, { value: FestivalResponse; expiresAt: number }>();
+const CACHE_TTL_MS = 1000 * 60 * 60 * 6;
+
+function utcDayNumber(date: Date): number {
+  return Math.floor(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000);
+}
+
+function diffDaysUtc(start: Date, end: Date): number {
+  return utcDayNumber(end) - utcDayNumber(start);
+}
+
 // 延迟加载模块，避免构建时解析问题
 async function getLunarCalendar() {
   try {
-    // 使用动态 import() 加载模块
-    const LunarCalendar = await import("lunar-calendar");
-    // 处理不同的导出方式
-    return LunarCalendar.default || LunarCalendar;
+    if (!lunarCalendarModulePromise) {
+      lunarCalendarModulePromise = import("lunar-calendar").then((mod: unknown) => {
+        const withDefault = mod as { default?: unknown };
+        const candidate = withDefault.default ?? mod;
+        return candidate as unknown as LunarCalendarApi;
+      });
+    }
+    return await lunarCalendarModulePromise;
   } catch (error) {
     console.error("无法加载 lunar-calendar 模块:", error);
     throw new Error("无法加载 lunar-calendar 模块");
@@ -17,7 +53,11 @@ export async function POST(request: NextRequest) {
   try {
     const { year, month, day } = await request.json();
 
-    if (!year || !month || !day) {
+    const yearNum = Number(year);
+    const monthNum = Number(month);
+    const dayNum = Number(day);
+
+    if (!Number.isFinite(yearNum) || !Number.isFinite(monthNum) || !Number.isFinite(dayNum)) {
       return NextResponse.json(
         { error: "缺少必要参数" },
         { status: 400 }
@@ -27,10 +67,17 @@ export async function POST(request: NextRequest) {
     // 在运行时加载模块
     const calendar = await getLunarCalendar();
 
-    const selectedDate = new Date(year, month - 1, day);
-    const currentYear = year;
-    const currentMonth = month;
-    const currentDay = day;
+    const selectedDate = new Date(yearNum, monthNum - 1, dayNum);
+    const cacheKey = `lunar:${yearNum}-${String(monthNum).padStart(2, "0")}-${String(dayNum).padStart(2, "0")}`;
+    const cached = responseCache.get(cacheKey);
+    const now = Date.now();
+    if (cached && cached.expiresAt > now) {
+      return NextResponse.json(cached.value);
+    }
+
+    const currentYear = yearNum;
+    const currentMonth = monthNum;
+    const currentDay = dayNum;
 
     // 最多查找未来2年的数据
     const maxMonths = 24;
@@ -61,26 +108,21 @@ export async function POST(request: NextRequest) {
             // 检查是否有农历节日
             if (lunarFestival && lunarFestival.trim() !== "") {
               const festivalDate = new Date(dateYear, dateMonth - 1, dateDay);
-              // 将时间设置为当天的开始，避免时间比较问题
-              festivalDate.setHours(0, 0, 0, 0);
-              const selectedDateStart = new Date(selectedDate);
-              selectedDateStart.setHours(0, 0, 0, 0);
-
-              // 只考虑选中日期之后的节日（不包括当天）
-              if (festivalDate > selectedDateStart) {
-                // 计算剩余天数
-                const daysLeft = Math.ceil(
-                  (festivalDate.getTime() - selectedDateStart.getTime()) / (1000 * 60 * 60 * 24)
-                );
+              const daysLeft = diffDaysUtc(selectedDate, festivalDate);
+              if (daysLeft >= 0) {
 
                 // 格式化日期显示 - 使用公历日期（因为用户看到的是公历日期）
                 const dateStr = `${dateMonth}月${dateDay}日`;
+                const isoDate = `${dateYear}-${String(dateMonth).padStart(2, "0")}-${String(dateDay).padStart(2, "0")}`;
 
-                return NextResponse.json({
+                const response: FestivalResponse = {
                   name: lunarFestival,
                   date: dateStr,
-                  daysLeft: daysLeft,
-                });
+                  isoDate,
+                  daysLeft,
+                };
+                responseCache.set(cacheKey, { value: response, expiresAt: now + CACHE_TTL_MS });
+                return NextResponse.json(response);
               }
             }
           }
@@ -105,6 +147,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 如果2年内都没找到，返回 null
+    responseCache.set(cacheKey, { value: null, expiresAt: now + CACHE_TTL_MS });
     return NextResponse.json(null);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "服务器错误";

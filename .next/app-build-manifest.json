@@ -12,28 +12,21 @@
       "static/chunks/c7879cf7-c19b5d874770bbb7.js",
       "static/chunks/508-5710c770570b8e9a.js",
       "static/chunks/main-app-8caad75d4f53560a.js",
-      "static/chunks/app/api/calendar/date-comprehensive-data/route-63cd7c03b010a17b.js"
+      "static/chunks/app/api/calendar/date-comprehensive-data/route-c7d28cb04091ecf1.js"
     ],
     "/api/chat/route": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",
       "static/chunks/c7879cf7-c19b5d874770bbb7.js",
       "static/chunks/508-5710c770570b8e9a.js",
       "static/chunks/main-app-8caad75d4f53560a.js",
-      "static/chunks/app/api/chat/route-63cd7c03b010a17b.js"
+      "static/chunks/app/api/chat/route-c7d28cb04091ecf1.js"
     ],
     "/api/lunar-festival/route": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",
       "static/chunks/c7879cf7-c19b5d874770bbb7.js",
       "static/chunks/508-5710c770570b8e9a.js",
       "static/chunks/main-app-8caad75d4f53560a.js",
-      "static/chunks/app/api/lunar-festival/route-63cd7c03b010a17b.js"
-    ],
-    "/api/lunar-holiday/route": [
-      "static/chunks/webpack-0213fbdcb80b69e5.js",
-      "static/chunks/c7879cf7-c19b5d874770bbb7.js",
-      "static/chunks/508-5710c770570b8e9a.js",
-      "static/chunks/main-app-8caad75d4f53560a.js",
-      "static/chunks/app/api/lunar-holiday/route-63cd7c03b010a17b.js"
+      "static/chunks/app/api/lunar-festival/route-c7d28cb04091ecf1.js"
     ],
     "/layout": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",
@@ -43,29 +36,19 @@
       "static/css/c482373d66e3d945.css",
       "static/chunks/app/layout-95d7962d9e6aafef.js"
     ],
-    "/cal/page": [
+    "/api/lunar-holiday/route": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",
       "static/chunks/c7879cf7-c19b5d874770bbb7.js",
       "static/chunks/508-5710c770570b8e9a.js",
       "static/chunks/main-app-8caad75d4f53560a.js",
-      "static/chunks/289-bd467d25268aa2c7.js",
-      "static/chunks/app/cal/page-eb2cdc0be9ade7bd.js"
+      "static/chunks/app/api/lunar-holiday/route-c7d28cb04091ecf1.js"
     ],
-    "/details/topic/[id]/page": [
+    "/api/tibetan-holiday/route": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",
       "static/chunks/c7879cf7-c19b5d874770bbb7.js",
       "static/chunks/508-5710c770570b8e9a.js",
       "static/chunks/main-app-8caad75d4f53560a.js",
-      "static/chunks/289-bd467d25268aa2c7.js",
-      "static/chunks/app/details/topic/[id]/page-c7bcc331a90668b3.js"
-    ],
-    "/docs/page": [
-      "static/chunks/webpack-0213fbdcb80b69e5.js",
-      "static/chunks/c7879cf7-c19b5d874770bbb7.js",
-      "static/chunks/508-5710c770570b8e9a.js",
-      "static/chunks/main-app-8caad75d4f53560a.js",
-      "static/chunks/289-bd467d25268aa2c7.js",
-      "static/chunks/app/docs/page-50302829a9207396.js"
+      "static/chunks/app/api/tibetan-holiday/route-c7d28cb04091ecf1.js"
     ],
     "/chat/page": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",
@@ -75,6 +58,22 @@
       "static/chunks/289-bd467d25268aa2c7.js",
       "static/chunks/app/chat/page-a9832a307c3eef90.js"
     ],
+    "/details/topic/[id]/page": [
+      "static/chunks/webpack-0213fbdcb80b69e5.js",
+      "static/chunks/c7879cf7-c19b5d874770bbb7.js",
+      "static/chunks/508-5710c770570b8e9a.js",
+      "static/chunks/main-app-8caad75d4f53560a.js",
+      "static/chunks/289-bd467d25268aa2c7.js",
+      "static/chunks/app/details/topic/[id]/page-c7bcc331a90668b3.js"
+    ],
+    "/cal/page": [
+      "static/chunks/webpack-0213fbdcb80b69e5.js",
+      "static/chunks/c7879cf7-c19b5d874770bbb7.js",
+      "static/chunks/508-5710c770570b8e9a.js",
+      "static/chunks/main-app-8caad75d4f53560a.js",
+      "static/chunks/289-bd467d25268aa2c7.js",
+      "static/chunks/app/cal/page-392a847db030afa2.js"
+    ],
     "/earth/page": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",
       "static/chunks/c7879cf7-c19b5d874770bbb7.js",
@@ -83,6 +82,14 @@
       "static/chunks/289-bd467d25268aa2c7.js",
       "static/chunks/660-b649c5d532af0b0c.js",
       "static/chunks/app/earth/page-71844eb4c85c990f.js"
+    ],
+    "/docs/page": [
+      "static/chunks/webpack-0213fbdcb80b69e5.js",
+      "static/chunks/c7879cf7-c19b5d874770bbb7.js",
+      "static/chunks/508-5710c770570b8e9a.js",
+      "static/chunks/main-app-8caad75d4f53560a.js",
+      "static/chunks/289-bd467d25268aa2c7.js",
+      "static/chunks/app/docs/page-50302829a9207396.js"
     ],
     "/details/[id]/page": [
       "static/chunks/webpack-0213fbdcb80b69e5.js",

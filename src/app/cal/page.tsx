@@ -1,18 +1,45 @@
 ﻿"use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { DateEventsCard, MoonPhaseCard, PlanetaryChartCard, CalendarBox } from "@/components";
 import AstrologicalTableCard, { type AstrologicalRow } from "@/components/widgets/AstrologicalTableCard";
 import WidgetCarousel from "@/components/widgets/WidgetCarousel";
 import FooterBar from "@/components/FooterBar";
 import { fetchCalendarData } from "@/services/calendarApi";
 
+const DEFAULT_CITY = "上海市";
+
+type HolidayInfo = { name: string; date: string; isoDate?: string; daysLeft: number };
+type FestivalKind = "solar" | "lunar" | "tibetan";
+type FestivalPrediction =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; data: HolidayInfo }
+  | { status: "empty" }
+  | { status: "error"; message?: string };
+
+function formatDaysLeftText(daysLeft?: number): string {
+  if (typeof daysLeft !== "number" || !Number.isFinite(daysLeft)) return "";
+  const d = Math.max(0, Math.floor(daysLeft));
+  return d === 0 ? "今天" : `还剩${d}天`;
+}
+
+function normalizeHolidayInfo(input: unknown): HolidayInfo | null {
+  if (!input || typeof input !== "object") return null;
+  const obj = input as Record<string, unknown>;
+  if (typeof obj.name !== "string" || typeof obj.date !== "string") return null;
+  const daysLeft = Number(obj.daysLeft);
+  if (!Number.isFinite(daysLeft)) return null;
+  const isoDate = typeof obj.isoDate === "string" ? obj.isoDate : undefined;
+  return { name: obj.name, date: obj.date, isoDate, daysLeft: Math.max(0, Math.floor(daysLeft)) };
+}
+
 
 
 
 export default function CalendarPage() {
   const [currentPage, setCurrentPage] = useState(0);
-  const [city, setCity] = useState("上海市");
+  const [city, setCity] = useState(DEFAULT_CITY);
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [year, setYear] = useState<number>(1970);
   const [month, setMonth] = useState<number>(0); // 0-11
@@ -22,6 +49,12 @@ export default function CalendarPage() {
   const [error, setError] = useState<string | null>(null);
   const [calendarData, setCalendarData] = useState<Awaited<ReturnType<typeof fetchCalendarData>> | null>(null);
   const [stars, setStars] = useState<Array<{ left: number; top: number; opacity: number }>>([]);
+  const [festivalPredictions, setFestivalPredictions] = useState<Record<FestivalKind, FestivalPrediction>>({
+    solar: { status: "idle" },
+    lunar: { status: "idle" },
+    tibetan: { status: "idle" }
+  });
+  const festivalRequestSeq = useRef(0);
   
 
   // 在客户端生成星星位置，避免 hydration mismatch
@@ -53,6 +86,68 @@ export default function CalendarPage() {
     return `${year}-${mm}-${dd}`;
   }, [year, month, selectedDay]);
 
+
+  const loadFestivalPredictions = (dateStr: string) => {
+    const parts = dateStr.split("-").map((v) => Number(v));
+    const [y, m, d] = parts;
+    if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return;
+
+    const requestId = ++festivalRequestSeq.current;
+    setFestivalPredictions({
+      solar: { status: "loading" },
+      lunar: { status: "loading" },
+      tibetan: { status: "loading" }
+    });
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4500);
+
+    const post = async (url: string): Promise<HolidayInfo | null> => {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ year: y, month: m, day: d }),
+        signal: controller.signal
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      const json = await res.json();
+      return normalizeHolidayInfo(json);
+    };
+
+    Promise.allSettled([
+      post("/api/lunar-festival"),
+      post("/api/lunar-holiday"),
+      post("/api/tibetan-holiday")
+    ])
+      .then(([solarRes, lunarRes, tibetanRes]) => {
+        if (festivalRequestSeq.current !== requestId) return;
+        const mapResult = (r: PromiseSettledResult<HolidayInfo | null>): FestivalPrediction => {
+          if (r.status === "rejected") return { status: "error", message: r.reason instanceof Error ? r.reason.message : undefined };
+          if (!r.value) return { status: "empty" };
+          if (!r.value.name.trim()) return { status: "empty" };
+          return { status: "success", data: r.value };
+        };
+
+        setFestivalPredictions({
+          solar: mapResult(solarRes),
+          lunar: mapResult(lunarRes),
+          tibetan: mapResult(tibetanRes)
+        });
+      })
+      .catch((e) => {
+        if (festivalRequestSeq.current !== requestId) return;
+        setFestivalPredictions({
+          solar: { status: "error", message: e instanceof Error ? e.message : undefined },
+          lunar: { status: "error", message: e instanceof Error ? e.message : undefined },
+          tibetan: { status: "error", message: e instanceof Error ? e.message : undefined }
+        });
+      })
+      .finally(() => {
+        clearTimeout(timeoutId);
+      });
+  };
 
 
   const loadData = async (date?: string, cityName?: string) => {
@@ -91,7 +186,9 @@ export default function CalendarPage() {
     setSelectedDay(newDay);
     const mm = String(d.getMonth() + 1).padStart(2, "0");
     const dd = String(newDay).padStart(2, "0");
-    loadData(`${d.getFullYear()}-${mm}-${dd}`, city);
+    const dateStr = `${d.getFullYear()}-${mm}-${dd}`;
+    loadData(dateStr, city);
+    loadFestivalPredictions(dateStr);
   };
 
   const handleNextMonth = () => {
@@ -104,14 +201,18 @@ export default function CalendarPage() {
     setSelectedDay(newDay);
     const mm = String(d.getMonth() + 1).padStart(2, "0");
     const dd = String(newDay).padStart(2, "0");
-    loadData(`${d.getFullYear()}-${mm}-${dd}`, city);
+    const dateStr = `${d.getFullYear()}-${mm}-${dd}`;
+    loadData(dateStr, city);
+    loadFestivalPredictions(dateStr);
   };
 
   const handleSelectDay = (day: number) => {
     setSelectedDay(day);
     const mm = String(month + 1).padStart(2, "0");
     const dd = String(day).padStart(2, "0");
-    loadData(`${year}-${mm}-${dd}`, city);
+    const dateStr = `${year}-${mm}-${dd}`;
+    loadData(dateStr, city);
+    loadFestivalPredictions(dateStr);
   };
 
   useEffect(() => {
@@ -126,9 +227,36 @@ export default function CalendarPage() {
 
     const mm = String(m + 1).padStart(2, "0");
     const dd = String(d).padStart(2, "0");
-    loadData(`${y}-${mm}-${dd}`, city);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const dateStr = `${y}-${mm}-${dd}`;
+    loadData(dateStr, DEFAULT_CITY);
+    loadFestivalPredictions(dateStr);
   }, []);
+
+  const buildFestivalEvent = (kind: FestivalKind, fallback?: HolidayInfo) => {
+    const prediction = festivalPredictions[kind];
+    if (prediction.status === "loading") {
+      return { label: "节日预测加载中...", colorClass: "bg-gray-500", daysLeftText: "" };
+    }
+    if (prediction.status === "error") {
+      return { label: "节日预测暂不可用", colorClass: "bg-gray-500", daysLeftText: "" };
+    }
+    if (prediction.status === "empty") {
+      return { label: "暂无节日", colorClass: "bg-gray-500", daysLeftText: "" };
+    }
+    const holiday =
+      prediction.status === "success"
+        ? prediction.data
+        : fallback;
+
+    if (!holiday?.name) {
+      return { label: "暂无节日", colorClass: "bg-gray-500", daysLeftText: "" };
+    }
+    return {
+      label: `${holiday.name} ${holiday.date}`,
+      colorClass: "bg-gray-500",
+      daysLeftText: formatDaysLeftText(holiday.daysLeft)
+    };
+  };
 
   const items = [
     <DateEventsCard
@@ -146,21 +274,9 @@ export default function CalendarPage() {
         { label: "藏", value: calendarData?.dateEvents?.tibetanInfo?.fullDate || "", colorClass: "bg-pink-400" }
       ]}
       events={[
-        {
-          label: `${calendarData?.dateEvents?.events?.solarHoliday?.name || ""} ${calendarData?.dateEvents?.events?.solarHoliday?.date || ""}`,
-          colorClass: "bg-gray-500",
-          daysLeftText: `还剩${calendarData?.dateEvents?.events?.solarHoliday?.daysLeft || 0}天`
-        },
-        {
-          label: `${calendarData?.dateEvents?.events?.lunarHoliday?.name || ""} ${calendarData?.dateEvents?.events?.lunarHoliday?.date || ""}`,
-          colorClass: "bg-gray-500",
-          daysLeftText: `还剩${calendarData?.dateEvents?.events?.lunarHoliday?.daysLeft || 0}天`
-        },
-        {
-          label: `${calendarData?.dateEvents?.events?.tibetanHoliday?.name || ""} ${calendarData?.dateEvents?.events?.tibetanHoliday?.date || ""}`,
-          colorClass: "bg-gray-500",
-          daysLeftText: `还剩${calendarData?.dateEvents?.events?.tibetanHoliday?.daysLeft || 0}天`
-        }
+        buildFestivalEvent("solar", calendarData?.dateEvents?.events?.solarHoliday),
+        buildFestivalEvent("lunar", calendarData?.dateEvents?.events?.lunarHoliday),
+        buildFestivalEvent("tibetan", calendarData?.dateEvents?.events?.tibetanHoliday)
       ]}
     />,
     <AstrologicalTableCard
