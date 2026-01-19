@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     const backendApiBase = getBackendApiBase();
     const bodyText = await request.text();
 
-    const backendResponse = await fetch(`${backendApiBase}/chat`, {
+    const backendResponse = await fetch(`${backendApiBase}/calendar/date-comprehensive-data`, {
       method: "POST",
       headers: {
         "Content-Type": request.headers.get("content-type") || "application/json",
@@ -38,3 +38,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
