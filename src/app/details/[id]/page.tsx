@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useParams } from 'next/navigation';
 import Link from "next/link";
 import Image from "next/image";
@@ -34,6 +35,16 @@ export default function DetailPage() {
     const params = useParams();
     const id = params.id;
     const card = cards.find(c => c.id.toString() === id);
+    const [stars, setStars] = useState<Array<{ left: number; top: number }>>([]);
+
+    useEffect(() => {
+        setStars(
+            [...Array(80)].map(() => ({
+                left: Math.random() * 100,
+                top: Math.random() * 100,
+            }))
+        );
+    }, []);
 
     if (!card) {
         return (
@@ -49,13 +60,13 @@ export default function DetailPage() {
             {/* 星空背景 */}
             <div className="fixed inset-0 bg-black">
                 <div className="absolute inset-0 opacity-30">
-                    {[...Array(80)].map((_, i) => (
+                    {stars.map((star, i) => (
                         <div
                             key={i}
                             className={`absolute w-1 h-1 bg-white rounded-full star`}
                             style={{
-                                left: `${Math.random() * 100}%`,
-                                top: `${Math.random() * 100}%`,
+                                left: `${star.left}%`,
+                                top: `${star.top}%`,
                             }}
                         ></div>
                     ))}

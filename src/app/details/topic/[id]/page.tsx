@@ -11,6 +11,7 @@ export default function TopicDetailPage() {
     const [content, setContent] = useState<string>("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [stars, setStars] = useState<Array<{ left: number; top: number }>>([]);
 
     // 主题标题映射：根据你给出的条目整理，尽量覆盖常见 id
     const topicTitles: Record<number, string> = {
@@ -89,18 +90,27 @@ export default function TopicDetailPage() {
         }
     }, [id]);
 
+    useEffect(() => {
+        setStars(
+            [...Array(100)].map(() => ({
+                left: Math.random() * 100,
+                top: Math.random() * 100,
+            }))
+        );
+    }, []);
+
     return (
         <div className="bg-black text-white min-h-screen overflow-x-hidden">
             {/* 星空背景 */}
             <div className="fixed inset-0 bg-black pointer-events-none">
                 <div className="absolute inset-0 opacity-30">
-                    {[...Array(100)].map((_, i) => (
+                    {stars.map((star, i) => (
                         <div
                             key={i}
                             className="absolute w-1 h-1 bg-white rounded-full star"
                             style={{
-                                left: `${Math.random() * 100}%`,
-                                top: `${Math.random() * 100}%`,
+                                left: `${star.left}%`,
+                                top: `${star.top}%`,
                             }}
                         />
                     ))}

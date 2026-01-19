@@ -17,6 +17,7 @@ interface HtmlFileInfo {
 
 export default function DocsPage() {
     const [cards, setCards] = useState<CardData[]>([]);
+    const [stars, setStars] = useState<Array<{ left: number; top: number }>>([]);
 
     useEffect(() => {
         // 藏历主题与简介映射
@@ -68,18 +69,27 @@ export default function DocsPage() {
         setCards(newCards);
     }, []);
 
+    useEffect(() => {
+        setStars(
+            [...Array(100)].map(() => ({
+                left: Math.random() * 100,
+                top: Math.random() * 100,
+            }))
+        );
+    }, []);
+
     return (
         <div className="bg-black text-white min-h-screen flex flex-col">
             {/* 星空背景 */}
             <div className="fixed inset-0 bg-black">
                 <div className="absolute inset-0 opacity-30">
-                    {[...Array(100)].map((_, i) => (
+                    {stars.map((star, i) => (
                         <div
                             key={i}
                             className="absolute w-1 h-1 bg-white rounded-full star"
                             style={{
-                                left: `${Math.random() * 100}%`,
-                                top: `${Math.random() * 100}%`,
+                                left: `${star.left}%`,
+                                top: `${star.top}%`,
                             }}
                         ></div>
                     ))}

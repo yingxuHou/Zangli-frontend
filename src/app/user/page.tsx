@@ -1,12 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import FooterBar from "@/components/FooterBar";
 
 export default function UserPage() {
     const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+    const [stars, setStars] = useState<Array<{ left: number; top: number }>>([]);
+
+    useEffect(() => {
+        setStars(
+            [...Array(80)].map(() => ({
+                left: Math.random() * 100,
+                top: Math.random() * 100,
+            }))
+        );
+    }, []);
 
     // 模拟点击事件
     const handleClick = (msg: string) => {
@@ -18,13 +28,13 @@ export default function UserPage() {
             {/* 背景星空效果 */}
             <div className="fixed inset-0 bg-black">
                 <div className="absolute inset-0 opacity-30">
-                    {[...Array(80)].map((_, i) => (
+                    {stars.map((star, i) => (
                         <div
                             key={i}
                             className={`absolute w-1 h-1 bg-white rounded-full star`}
                             style={{
-                                left: `${Math.random() * 100}%`,
-                                top: `${Math.random() * 100}%`,
+                                left: `${star.left}%`,
+                                top: `${star.top}%`,
                             }}
                         ></div>
                     ))}

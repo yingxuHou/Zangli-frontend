@@ -14,9 +14,10 @@ export default function CalendarPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [city, setCity] = useState("上海市");
   const [isCityOpen, setIsCityOpen] = useState(false);
-  const [year, setYear] = useState<number>(new Date().getFullYear());
-  const [month, setMonth] = useState<number>(new Date().getMonth()); // 0-11
-  const [selectedDay, setSelectedDay] = useState<number>(new Date().getDate());
+  const [year, setYear] = useState<number>(1970);
+  const [month, setMonth] = useState<number>(0); // 0-11
+  const [selectedDay, setSelectedDay] = useState<number>(1);
+  const [ready, setReady] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [calendarData, setCalendarData] = useState<Awaited<ReturnType<typeof fetchCalendarData>> | null>(null);
@@ -35,9 +36,10 @@ export default function CalendarPage() {
   }, []);
 
   const currentMonthLabel = useMemo(() => {
+    if (!ready) return "";
     const d = new Date(year, month, 1);
-    return d.toLocaleDateString(undefined, { year: "numeric", month: "long" });
-  }, [year, month]);
+    return d.toLocaleDateString("zh-CN", { year: "numeric", month: "long" });
+  }, [ready, year, month]);
 
   const daysInMonth = useMemo(() => new Date(year, month + 1, 0).getDate(), [year, month]);
   const startOffset = useMemo(() => {
@@ -113,8 +115,18 @@ export default function CalendarPage() {
   };
 
   useEffect(() => {
-    // 初始化加载当前日期
-    loadData(undefined, city);
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = now.getMonth();
+    const d = now.getDate();
+    setYear(y);
+    setMonth(m);
+    setSelectedDay(d);
+    setReady(true);
+
+    const mm = String(m + 1).padStart(2, "0");
+    const dd = String(d).padStart(2, "0");
+    loadData(`${y}-${mm}-${dd}`, city);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -251,16 +263,20 @@ export default function CalendarPage() {
 
           <div className="flex items-center justify-center mt-2">{/*日历距离顶部距离*/}
             <div className="w-[90%] sm:w-[82%] md:w-[70%] max-w-[520px]">
-              <CalendarBox
-                currentMonth={currentMonthLabel}
-                containerClassName="rounded-20 selected-26"
-                startOffset={startOffset}
-                daysInMonth={daysInMonth}
-                initialSelected={selectedDay}
-                onPrevMonth={handlePrevMonth}
-                onNextMonth={handleNextMonth}
-                onSelectDay={handleSelectDay}
-              />
+              {ready ? (
+                <CalendarBox
+                  currentMonth={currentMonthLabel}
+                  containerClassName="rounded-20 selected-26"
+                  startOffset={startOffset}
+                  daysInMonth={daysInMonth}
+                  initialSelected={selectedDay}
+                  onPrevMonth={handlePrevMonth}
+                  onNextMonth={handleNextMonth}
+                  onSelectDay={handleSelectDay}
+                />
+              ) : (
+                <div className="text-center text-gray-300 py-10">加载中...</div>
+              )}
             </div>
           </div>
 

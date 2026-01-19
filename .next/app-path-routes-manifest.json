@@ -1,15 +1,16 @@
 {
-  "/_not-found/page": "/_not-found",
+  "/api/calendar/date-comprehensive-data/route": "/api/calendar/date-comprehensive-data",
   "/api/chat/route": "/api/chat",
-  "/api/lunar-holiday/route": "/api/lunar-holiday",
   "/api/lunar-festival/route": "/api/lunar-festival",
+  "/api/lunar-holiday/route": "/api/lunar-holiday",
+  "/_not-found/page": "/_not-found",
   "/favicon.ico/route": "/favicon.ico",
-  "/chat/page": "/chat",
   "/cal/page": "/cal",
-  "/details/[id]/page": "/details/[id]",
   "/details/topic/[id]/page": "/details/topic/[id]",
   "/docs/page": "/docs",
+  "/chat/page": "/chat",
   "/earth/page": "/earth",
+  "/details/[id]/page": "/details/[id]",
   "/page": "/",
   "/user/page": "/user"
 }

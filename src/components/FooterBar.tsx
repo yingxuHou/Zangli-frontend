@@ -14,10 +14,6 @@ interface NavItem {
 // 自适应 hook - 修复：初始化时立即获取真实窗口宽度
 function useWindowWidth(): number {
   const [width, setWidth] = useState<number>(() => {
-    // 在客户端初始化时立即获取真实窗口宽度
-    if (typeof window !== 'undefined') {
-      return window.innerWidth;
-    }
     return 390; // 服务端渲染时的默认值
   });
 
